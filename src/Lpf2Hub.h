@@ -124,13 +124,13 @@ public:
   void notifyCallback(NimBLERemoteCharacteristic *pBLERemoteCharacteristic, uint8_t *pData, size_t length, bool isNotify);
   BLEUUID _bleUuid;
   BLEUUID _charachteristicUuid;
-  BLEAddress *_pServerAddress;
+  BLEAddress *_pServerAddress = nullptr;
   BLEAddress *_requestedDeviceAddress = nullptr;
-  BLERemoteCharacteristic *_pRemoteCharacteristic;
-  HubType _hubType;
+  BLERemoteCharacteristic *_pRemoteCharacteristic = nullptr;
+  HubType _hubType = HubType::UNKNOWNHUB;
   std::string _hubName;
-  boolean _isConnecting;
-  boolean _isConnected;
+  boolean _isConnecting = false;
+  boolean _isConnected = false;
 
 private:
   // Notification callbacks
