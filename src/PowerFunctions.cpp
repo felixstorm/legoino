@@ -205,7 +205,6 @@ void PowerFunctions::send(uint8_t channel)
 {
   uint8_t i, j;
   uint16_t message = _nib1 << 12 | _nib2 << 8 | _nib3 << 4 | PF_CHECKSUM();
-  bool flipDebugLed = false;
   for (i = 0; i < 6; i++)
   {
     pause(i, channel);
