@@ -218,8 +218,9 @@ enum Color
   NONE = 255
 };
 
-static const char *COLOR_STRING[NUM_COLORS + 1] = {
-    "black", "pink", "purple", "blue", "lightblue", "cyan", "green", "yellow", "orange", "red", "white", "none"};
+static const char *COLOR_STRING[NUM_COLORS + 1] __attribute__((unused)) = {
+    "black", "pink", "purple", "blue", "lightblue", "cyan", "green", "yellow", "orange", "red", "white", "none"
+};
 
 enum struct DuploTrainBaseSound
 {

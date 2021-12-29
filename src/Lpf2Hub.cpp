@@ -256,13 +256,13 @@ void Lpf2Hub::parseDeviceInfo(uint8_t *pData)
     }
     else if (pData[3] == (byte)HubPropertyReference::FW_VERSION)
     {
-        Version version = parseVersion(pData);
+        Version version __attribute__((unused)) = parseVersion(pData);
         log_d("version: %d-%d-%d (%d)", version.Major, version.Minor, version.Bugfix, version.Build);
         return;
     }
     else if (pData[3] == (byte)HubPropertyReference::HW_VERSION)
     {
-        Version version = parseVersion(pData);
+        Version version __attribute__((unused)) = parseVersion(pData);
         log_d("version: %d-%d-%d (%d)", version.Major, version.Minor, version.Bugfix, version.Build);
         return;
     }
@@ -722,26 +722,22 @@ void Lpf2Hub::parseSensorMessage(uint8_t *pData)
     }
     else if (deviceType == (byte)DeviceType::REMOTE_CONTROL_BUTTON)
     {
-        int port = pData[3];
         parseRemoteButton(pData);
         return;
     }
     else if (deviceType == (byte)DeviceType::MARIO_HUB_GESTURE_SENSOR)
     {
-        int port = pData[3];
         parseMarioGesture(pData);
         return;
     }
     else if (deviceType == (byte)DeviceType::MARIO_HUB_BARCODE_SENSOR)
     {
-        int port = pData[3];
         parseMarioBarcode(pData);
         parseMarioColor(pData);
         return;
     }
     else if (deviceType == (byte)DeviceType::MARIO_HUB_PANT_SENSOR)
     {
-        int port = pData[3];
         parseMarioPant(pData);
         return;
     }
