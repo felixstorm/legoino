@@ -811,7 +811,9 @@ void Lpf2Hub::init()
     BLEDevice::init("");
     BLEScan *pBLEScan = BLEDevice::getScan();
 
-    pBLEScan->setAdvertisedDeviceCallbacks(new Lpf2HubAdvertisedDeviceCallbacks(this));
+    if (_pAdvertisedDeviceCallbacks == nullptr)
+        _pAdvertisedDeviceCallbacks = new Lpf2HubAdvertisedDeviceCallbacks(this);
+    pBLEScan->setAdvertisedDeviceCallbacks(_pAdvertisedDeviceCallbacks);
 
     pBLEScan->setActiveScan(true);
     // start method with callback function to enforce the non blocking scan. If no callback function is used,
@@ -825,6 +827,9 @@ void Lpf2Hub::init()
  */
 void Lpf2Hub::init(std::string deviceAddress)
 {
+    if (_requestedDeviceAddress != nullptr)
+        delete _requestedDeviceAddress;
+
     _requestedDeviceAddress = new BLEAddress(deviceAddress);
     init();
 }
@@ -846,6 +851,9 @@ void Lpf2Hub::init(uint32_t scanDuration)
  */
 void Lpf2Hub::init(std::string deviceAddress, uint32_t scanDuration)
 {
+    if (_requestedDeviceAddress != nullptr)
+        delete _requestedDeviceAddress;
+
     _requestedDeviceAddress = new BLEAddress(deviceAddress);
     _scanDuration = scanDuration;
     init();
