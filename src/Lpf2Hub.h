@@ -130,7 +130,7 @@ public:
   BLEAddress *_pServerAddress = nullptr;
   BLEAddress *_requestedDeviceAddress = nullptr;
   BLERemoteCharacteristic *_pRemoteCharacteristic = nullptr;
-  BLEScan *pBLEScan;
+  BLEScan *pBLEScan = nullptr;
   HubType _hubType = HubType::UNKNOWNHUB;
   std::string _hubName;
   boolean _isConnecting = false;

@@ -1191,7 +1191,7 @@ bool Lpf2Hub::isConnected()
  * @return Scanning status
  */
 bool Lpf2Hub::isScanning() {
-    return pBLEScan->isScanning();
+    return pBLEScan != nullptr && pBLEScan->isScanning();
 }
 
 /**
