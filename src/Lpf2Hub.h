@@ -45,6 +45,7 @@ public:
   bool connectHub();
   bool isConnected();
   bool isConnecting();
+  bool isScanning();
   NimBLEAddress getHubAddress();
   HubType getHubType();
   std::string getHubName();
@@ -89,6 +90,7 @@ public:
 
   void playSound(byte sound);
   void playTone(byte number);
+  void setMarioVolume(byte volume);
 
   // parse methods to read in the message content of the charachteristic value
   void parseDeviceInfo(uint8_t *pData);
@@ -128,6 +130,7 @@ public:
   BLEAddress *_pServerAddress = nullptr;
   BLEAddress *_requestedDeviceAddress = nullptr;
   BLERemoteCharacteristic *_pRemoteCharacteristic = nullptr;
+  BLEScan *pBLEScan;
   HubType _hubType = HubType::UNKNOWNHUB;
   std::string _hubName;
   boolean _isConnecting = false;
