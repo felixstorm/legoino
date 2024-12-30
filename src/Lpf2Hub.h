@@ -6,8 +6,6 @@
  *
  */
 
-#if defined(ESP32)
-
 #ifndef Lpf2Hub_h
 #define Lpf2Hub_h
 
@@ -149,5 +147,3 @@ private:
 };
 
 #endif // Lpf2Hub_h
-
-#endif // ESP32

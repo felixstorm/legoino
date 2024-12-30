@@ -12,8 +12,6 @@
  *
  */
 
-#if defined(ESP32)
-
 #include "Lpf2HubEmulation.h"
 
 class Lpf2HubServerCallbacks : public NimBLEServerCallbacks
@@ -606,5 +604,3 @@ std::string Lpf2HubEmulation::getPortModeInformationRequestPayload(DeviceType de
 
   return payload;
 }
-
-#endif // ESP32

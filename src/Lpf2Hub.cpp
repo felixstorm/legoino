@@ -6,8 +6,6 @@
  *
  */
 
-#if defined(ESP32)
-
 #include "Lpf2Hub.h"
 
 /**
@@ -1391,5 +1389,3 @@ void Lpf2Hub::setMarioVolume(byte volume)
     byte setVolume[4] = {0x01, 0x12, 0x01, volume};
     WriteValue(setVolume, 4);
 }
-
-#endif // ESP32

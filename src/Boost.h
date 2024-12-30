@@ -8,8 +8,6 @@
  *
  */
 
-#if defined(ESP32)
-
 #ifndef Boost_h
 #define Boost_h
 
@@ -33,5 +31,3 @@ public:
 };
 
 #endif // Boost_h
-
-#endif // ESP32
