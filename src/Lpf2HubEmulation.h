@@ -1,15 +1,15 @@
 /*
  * Lpf2HubEmulation.h - Arduino base class for emulating a hub.
- * 
+ *
  * (c) Copyright 2020 - Cornelius Munz
- * 
+ *
  * Initial issue/idea by https://github.com/AlbanT
  * Initial implementation idea by https://github.com/marcrupprath
  * Initial implementation with controlling LEDs and outputs by https://github.com/GianCann
- * 
+ *
  * Released under MIT License
- * 
-*/
+ *
+ */
 
 #if defined(ESP32)
 
@@ -40,7 +40,7 @@ private:
   BLEAddress *_hubAddress = nullptr;
   BLEAdvertising *_pAdvertising;
 
-    // Hub information values
+  // Hub information values
   int8_t _rssi;
   uint8_t _batteryLevel;
   BatteryType _batteryType;
@@ -49,7 +49,7 @@ private:
   Version _firmwareVersion;
   Version _hardwareVersion;
 
-    // List of connected devices
+  // List of connected devices
   Device connectedDevices[13];
   int numberOfConnectedDevices = 0;
 
@@ -62,7 +62,6 @@ public:
   void setHubBatteryLevel(uint8_t batteryLevel);
   void setHubBatteryType(BatteryType batteryType);
   void setHubName(std::string hubName, bool notify = true);
-
 
   std::string getHubName();
   BatteryType getBatteryType();
@@ -83,7 +82,6 @@ public:
   bool isPortInitialized = false;
   BLECharacteristic *pCharacteristic;
   WritePortCallback writePortCallback = nullptr;
-
 };
 
 #endif // Lpf2HubEmulation_h

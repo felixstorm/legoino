@@ -1,13 +1,13 @@
 /*
-* Lego Power Functions Infrared Control for Arduino
-* original source from https://github.com/jurriaan/Arduino-PowerFunctions
-*
-* see http://www.philohome.com/pf/LEGO_Power_Functions_RC_v120.pdf for more info
-* Based on SuperCow's code (http://forum.arduino.cc/index.php?topic=38142.0)
-**
-*  Released under MIT License
-*
-*/
+ * Lego Power Functions Infrared Control for Arduino
+ * original source from https://github.com/jurriaan/Arduino-PowerFunctions
+ *
+ * see http://www.philohome.com/pf/LEGO_Power_Functions_RC_v120.pdf for more info
+ * Based on SuperCow's code (http://forum.arduino.cc/index.php?topic=38142.0)
+ **
+ *  Released under MIT License
+ *
+ */
 
 #include <stdlib.h>
 #include "PowerFunctions.h"
@@ -16,7 +16,7 @@
 /**
  * @brief Convert speed value to the supported PWM ranges
  * @param [in] speed value -100..100 which should be converted to a PWM value
- * @return pwm value 
+ * @return pwm value
  */
 PowerFunctionsPwm PowerFunctions::speedToPwm(byte speed)
 {
@@ -53,7 +53,7 @@ PowerFunctions::PowerFunctions(uint8_t pin, uint8_t channel)
 /**
  * @brief Constructor to define the pin of the IR LED
  * @param [in] pin Pin of the IR LED which should be used to send out power function IR signals
-  */
+ */
 PowerFunctions::PowerFunctions(uint8_t pin)
 {
   _channel = 0;
@@ -91,7 +91,7 @@ void PowerFunctions::single_pwm(PowerFunctionsPort port, PowerFunctionsPwm pwm, 
 /**
  * @brief increment pwm signal on a defined port (red/blue)
  * @param [in] port The output port to which the pwm signal is transmitted (Red=0x0, Blue=0x01)
-  */
+ */
 void PowerFunctions::single_increment(PowerFunctionsPort port)
 {
   single_increment(port, _channel);
@@ -101,7 +101,7 @@ void PowerFunctions::single_increment(PowerFunctionsPort port)
  * @brief increment pwm signal on a defined port (red/blue)
  * @param [in] port The output port to which the pwm signal is transmitted (Red=0x0, Blue=0x01)
  * @param [in] channel IR channel 0..4 which should be used to send out signals
-  */
+ */
 void PowerFunctions::single_increment(PowerFunctionsPort port, uint8_t channel)
 {
   _nib1 = _toggle | channel;
@@ -114,7 +114,7 @@ void PowerFunctions::single_increment(PowerFunctionsPort port, uint8_t channel)
 /**
  * @brief decrement pwm signal on a defined port (red/blue)
  * @param [in] port The output port to which the pwm signal is transmitted (Red=0x0, Blue=0x01)
-  */
+ */
 void PowerFunctions::single_decrement(PowerFunctionsPort port)
 {
   single_decrement(port, _channel);
@@ -124,7 +124,7 @@ void PowerFunctions::single_decrement(PowerFunctionsPort port)
  * @brief decrement pwm signal on a defined port (red/blue)
  * @param [in] port The output port to which the pwm signal is transmitted (Red=0x0, Blue=0x01)
  * @param [in] channel IR channel 0..4 which should be used to send out signals
-  */
+ */
 void PowerFunctions::single_decrement(PowerFunctionsPort port, uint8_t channel)
 {
   _nib1 = _toggle | channel;
@@ -179,7 +179,7 @@ void PowerFunctions::pause(uint8_t count, uint8_t channel)
   { // 3, 4, 5
     pause = 5 + (channel + 1) * 2;
   }
-  delayMicroseconds(pause * 77); //MAX_MESSAGE_LENGTH
+  delayMicroseconds(pause * 77); // MAX_MESSAGE_LENGTH
 }
 
 // Send the start/stop bit

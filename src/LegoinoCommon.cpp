@@ -4,7 +4,7 @@
  * (c) Copyright 2020 - Cornelius Munz
  * Released under MIT License
  *
-*/
+ */
 
 #if defined(ESP32)
 
@@ -47,10 +47,11 @@ std::string LegoinoCommon::ColorStringFromColor(Color color)
  */
 std::string LegoinoCommon::ColorStringFromColor(int color)
 {
-    if (color > Color::NUM_COLORS) {
+    if (color > Color::NUM_COLORS)
+    {
         return std::string(COLOR_STRING[Color::NUM_COLORS]);
-    } 
-    else 
+    }
+    else
     {
         return std::string(COLOR_STRING[color]);
     }

@@ -1,10 +1,10 @@
 /*
  * Lpf2Hub.h - Arduino base class for controlling Powered UP and Boost controllers
- * 
+ *
  * (c) Copyright 2020 - Cornelius Munz
  * Released under MIT License
- * 
-*/
+ *
+ */
 
 #if defined(ESP32)
 
@@ -144,7 +144,7 @@ private:
   Device connectedDevices[13];
   int numberOfConnectedDevices = 0;
 
-  //BLE settings
+  // BLE settings
   uint32_t _scanDuration = 10;
 };
 

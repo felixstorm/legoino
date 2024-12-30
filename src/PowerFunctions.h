@@ -1,14 +1,14 @@
 /*
-* Lego Power Functions Infrared Control for Arduino
-* original source from https://github.com/jurriaan/Arduino-PowerFunctions
-*
-* see http://www.philohome.com/pf/LEGO_Power_Functions_RC_v120.pdf for more info
-* Based on SuperCow's code (http://forum.arduino.cc/index.php?topic=38142.0)
-*
-*
-*  Released under MIT License
-*
-*/
+ * Lego Power Functions Infrared Control for Arduino
+ * original source from https://github.com/jurriaan/Arduino-PowerFunctions
+ *
+ * see http://www.philohome.com/pf/LEGO_Power_Functions_RC_v120.pdf for more info
+ * Based on SuperCow's code (http://forum.arduino.cc/index.php?topic=38142.0)
+ *
+ *
+ *  Released under MIT License
+ *
+ */
 
 #ifndef PowerFunctions_h
 #define PowerFunctions_h
@@ -34,7 +34,7 @@
 #define PF_HALF_PERIOD PF_IR_CYCLES(0.5)
 #define PF_MAX_MESSAGE_LENGTH PF_IR_CYCLES(522) // 2 * 45 + 16 * 27
 
-//PWM speed steps
+// PWM speed steps
 enum struct PowerFunctionsPwm
 {
   FLOAT = 0x0,

@@ -1,12 +1,12 @@
 /*
  * Boost.h - Arduino Library for controlling LEGO® Boost Model (17101)
  * It has included some higher level abstratctions for moving one step forward/back
- * rotate the model or move with an arc. 
- * 
+ * rotate the model or move with an arc.
+ *
  * (c) Copyright 2020 - Cornelius Munz
  * Released under MIT License
- * 
-*/
+ *
+ */
 
 #if defined(ESP32)
 
@@ -18,10 +18,10 @@
 class Boost : public Lpf2Hub
 {
 public:
-  //Constructor
+  // Constructor
   Boost();
 
-  //Basic Move/Rotate methods
+  // Basic Move/Rotate methods
   void moveForward(int steps);
   void moveBack(int steps);
   void rotate(int degrees);

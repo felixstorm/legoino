@@ -4,7 +4,7 @@
  * (c) Copyright 2020 - Cornelius Munz
  * Released under MIT License
  *
-*/
+ */
 
 #if defined(ESP32)
 

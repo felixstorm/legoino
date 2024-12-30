@@ -1,10 +1,10 @@
 /*
  * Lpf2HubConst.h - definition of enum types and constants
- * 
+ *
  * (c) Copyright 2020 - Cornelius Munz
  * Released under MIT License
- * 
-*/
+ *
+ */
 
 #ifndef Lpf2HubConst_h
 #define Lpf2HubConst_h
@@ -39,12 +39,12 @@ enum struct HubType
 
 enum BLEManufacturerData
 {
-  DUPLO_TRAIN_HUB_ID = 32,   //0x20
-  BOOST_MOVE_HUB_ID = 64,    //0x40
-  POWERED_UP_HUB_ID = 65,    //0x41
-  POWERED_UP_REMOTE_ID = 66, //0x42
-  MARIO_HUB_ID = 67,         //0x32
-  CONTROL_PLUS_HUB_ID = 128  //0x80
+  DUPLO_TRAIN_HUB_ID = 32,   // 0x20
+  BOOST_MOVE_HUB_ID = 64,    // 0x40
+  POWERED_UP_HUB_ID = 65,    // 0x41
+  POWERED_UP_REMOTE_ID = 66, // 0x42
+  MARIO_HUB_ID = 67,         // 0x32
+  CONTROL_PLUS_HUB_ID = 128  // 0x80
 };
 
 enum struct MessageHeader
@@ -102,7 +102,7 @@ enum struct DeviceType
   TECHNIC_COLOR_SENSOR = 61,              // Spike Prime
   TECHNIC_DISTANCE_SENSOR = 62,           // Spike Prime
   TECHNIC_FORCE_SENSOR = 63,              // Spike Prime
-  MARIO_HUB_GESTURE_SENSOR = 71,                 // https://github.com/bricklife/LEGO-Mario-Reveng
+  MARIO_HUB_GESTURE_SENSOR = 71,          // https://github.com/bricklife/LEGO-Mario-Reveng
   MARIO_HUB_BARCODE_SENSOR = 73,          // https://github.com/bricklife/LEGO-Mario-Reveng
   MARIO_HUB_PANT_SENSOR = 74,             // https://github.com/bricklife/LEGO-Mario-Reveng
   TECHNIC_MEDIUM_ANGULAR_MOTOR_GREY = 75, // Mindstorms
@@ -219,8 +219,7 @@ enum Color
 };
 
 static const char *COLOR_STRING[NUM_COLORS + 1] __attribute__((unused)) = {
-    "black", "pink", "purple", "blue", "lightblue", "cyan", "green", "yellow", "orange", "red", "white", "none"
-};
+    "black", "pink", "purple", "blue", "lightblue", "cyan", "green", "yellow", "orange", "red", "white", "none"};
 
 enum struct DuploTrainBaseSound
 {
@@ -231,7 +230,7 @@ enum struct DuploTrainBaseSound
   STEAM = 10
 };
 
-//https://github.com/bricklife/LEGO-Mario-Reveng/blob/master/IOType-0x4a.md
+// https://github.com/bricklife/LEGO-Mario-Reveng/blob/master/IOType-0x4a.md
 enum struct MarioPant
 {
   NONE = 0x00,
@@ -244,7 +243,7 @@ enum struct MarioPant
   BUILDER = 0x22
 };
 
-//https://github.com/bricklife/LEGO-Mario-Reveng/blob/master/IOType-0x49.md
+// https://github.com/bricklife/LEGO-Mario-Reveng/blob/master/IOType-0x49.md
 enum struct MarioBarcode
 {
   NONE = 0xFF00,
@@ -260,7 +259,7 @@ enum struct MarioBarcode
   START = 0xB800
 };
 
-//https://github.com/bricklife/LEGO-Mario-Reveng/blob/master/IOType-0x49.md
+// https://github.com/bricklife/LEGO-Mario-Reveng/blob/master/IOType-0x49.md
 enum struct MarioColor
 {
   NONE = 0xFFFF,
@@ -276,7 +275,7 @@ enum struct MarioColor
   CYAN = 0x4201
 };
 
-//https://github.com/sharpbrick/powered-up
+// https://github.com/sharpbrick/powered-up
 enum struct MarioGesture
 {
   NONE = 0x0000,
@@ -353,7 +352,7 @@ enum struct PoweredUpRemoteHubPort
   RSSI = 0x3C
 };
 
-//https://github.com/bricklife/LEGO-Mario-Reveng/blob/master/IOType-0x4a.md
+// https://github.com/bricklife/LEGO-Mario-Reveng/blob/master/IOType-0x4a.md
 enum struct MarioHubPort
 {
   GESTURE = 0x00,

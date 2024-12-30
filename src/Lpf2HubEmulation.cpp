@@ -1,16 +1,16 @@
 /*
  * Lpf2HubEmulation.cpp - Arduino base class for emulating a hub.
- * 
+ *
  * (c) Copyright 2020 - Cornelius Munz
- * 
+ *
  * Initial issue/idea by https://github.com/AlbanT
  * Initial implementation idea by https://github.com/marcrupprath
  * Initial implementation with controlling LEDs and outputs by https://github.com/GianCann
  * Many thanks for contributing to that solution!!
- * 
+ *
  * Released under MIT License
- * 
-*/
+ *
+ */
 
 #if defined(ESP32)
 
@@ -43,7 +43,7 @@ public:
   // This is required to make it working with BLE Scanner and PoweredUp on devices with Android <6.
   // This seems to be not needed for Android >=6
   // TODO: find out why this method helps. Maybe it goes about timeout?
-  void onConnect(NimBLEServer* pServer, ble_gap_conn_desc* desc)
+  void onConnect(NimBLEServer *pServer, ble_gap_conn_desc *desc)
   {
     pServer->updateConnParams(desc->conn_handle, 24, 48, 0, 60);
   };
@@ -177,27 +177,27 @@ public:
       {
         if (msgReceived[(byte)HubPropertyMessage::PROPERTY] == (char)HubPropertyReference::ADVERTISING_NAME)
         {
-          //5..length
+          // 5..length
           _lpf2HubEmulation->setHubName(msgReceived.substr(5, msgReceived.length() - 5), false);
           log_d("hub name: %s", _lpf2HubEmulation->getHubName().c_str());
         }
       }
 
-      //It's a port out command:
-      //execute and send feedback to the App
+      // It's a port out command:
+      // execute and send feedback to the App
       if (msgReceived[(byte)MessageHeader::MESSAGE_TYPE] == (char)MessageType::PORT_OUTPUT_COMMAND)
       {
-        //Reply to the App "Command excecuted"
-        byte msgPortCommandFeedbackReply[] = {0x05, 0x00, 0x82, 0x00, 0x0A};                                           //0x0A Command complete+buffer empty+idle
-        msgPortCommandFeedbackReply[(byte)PortOutputMessage::PORT_ID] = msgReceived[(byte)PortOutputMessage::PORT_ID]; //set the port_id
+        // Reply to the App "Command excecuted"
+        byte msgPortCommandFeedbackReply[] = {0x05, 0x00, 0x82, 0x00, 0x0A};                                           // 0x0A Command complete+buffer empty+idle
+        msgPortCommandFeedbackReply[(byte)PortOutputMessage::PORT_ID] = msgReceived[(byte)PortOutputMessage::PORT_ID]; // set the port_id
         _lpf2HubEmulation->pCharacteristic->setValue(msgPortCommandFeedbackReply, sizeof(msgPortCommandFeedbackReply));
         _lpf2HubEmulation->pCharacteristic->notify();
 
-        if (msgReceived[(byte)PortOutputMessage::SUB_COMMAND] == 0x51) //OUT_PORT_CMD_WRITE_DIRECT
+        if (msgReceived[(byte)PortOutputMessage::SUB_COMMAND] == 0x51) // OUT_PORT_CMD_WRITE_DIRECT
         {
           if (_lpf2HubEmulation->writePortCallback != nullptr)
           {
-            _lpf2HubEmulation->writePortCallback(msgReceived[(byte)PortOutputMessage::PORT_ID], msgReceived[0x07]); //WRITE_DIRECT_VALUE
+            _lpf2HubEmulation->writePortCallback(msgReceived[(byte)PortOutputMessage::PORT_ID], msgReceived[0x07]); // WRITE_DIRECT_VALUE
           }
         }
       }
@@ -222,7 +222,7 @@ public:
   }
 };
 
-Lpf2HubEmulation::Lpf2HubEmulation(){};
+Lpf2HubEmulation::Lpf2HubEmulation() {};
 
 Lpf2HubEmulation::Lpf2HubEmulation(std::string hubName, HubType hubType)
 {
@@ -242,7 +242,7 @@ void Lpf2HubEmulation::attachDevice(byte port, DeviceType deviceType)
   payload.push_back((char)Event::ATTACHED_IO);
   payload.push_back((char)deviceType);
   std::string versionInformation = {0x00, 0x00, 0x00, 0x00, 0x10, 0x00, 0x00, 0x00, 0x10};
-  payload.append(versionInformation); //version numbers
+  payload.append(versionInformation); // version numbers
   writeValue(MessageType::HUB_ATTACHED_IO, payload);
 
   Device newDevice = {port, (byte)deviceType};
@@ -416,8 +416,8 @@ void Lpf2HubEmulation::start()
 
   _pAdvertising->addServiceUUID(LPF2_UUID);
   _pAdvertising->setScanResponse(true);
-  _pAdvertising->setMinInterval(32);//0.625ms units -> 20ms
-  _pAdvertising->setMaxInterval(64);//0.625ms units -> 40ms
+  _pAdvertising->setMinInterval(32); // 0.625ms units -> 20ms
+  _pAdvertising->setMaxInterval(64); // 0.625ms units -> 40ms
 
   std::string manufacturerData;
   if (_hubType == HubType::POWERED_UP_HUB)
