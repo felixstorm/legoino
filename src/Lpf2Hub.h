@@ -124,7 +124,7 @@ public:
   void notifyCallback(NimBLERemoteCharacteristic *pBLERemoteCharacteristic, uint8_t *pData, size_t length, bool isNotify);
   BLEUUID _bleUuid;
   BLEUUID _charachteristicUuid;
-  NimBLEAdvertisedDeviceCallbacks *_pAdvertisedDeviceCallbacks = nullptr;
+  NimBLEScanCallbacks *_pScanCallbacks = nullptr;
   BLEAddress *_pServerAddress = nullptr;
   BLEAddress *_requestedDeviceAddress = nullptr;
   BLERemoteCharacteristic *_pRemoteCharacteristic = nullptr;

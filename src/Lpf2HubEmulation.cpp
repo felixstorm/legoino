@@ -25,26 +25,23 @@ public:
     _lpf2HubEmulation = lpf2HubEmulation;
   }
 
-  void onConnect(NimBLEServer *pServer)
+  void onConnect(NimBLEServer *pServer, NimBLEConnInfo &connInfo) override
   {
     log_d("Device connected");
     _lpf2HubEmulation->isConnected = true;
+
+    // This is required to make it working with BLE Scanner and PoweredUp on devices with Android <6.
+    // This seems to be not needed for Android >=6
+    // TODO: find out why this method helps. Maybe it goes about timeout?
+    pServer->updateConnParams(connInfo.getConnHandle(), 24, 48, 0, 60);
   };
 
-  void onDisconnect(NimBLEServer *pServer)
+  void onDisconnect(NimBLEServer *pServer, NimBLEConnInfo &connInfo, int reason) override
   {
     log_d("Device disconnected");
     _lpf2HubEmulation->isConnected = false;
     _lpf2HubEmulation->isPortInitialized = false;
   }
-
-  // This is required to make it working with BLE Scanner and PoweredUp on devices with Android <6.
-  // This seems to be not needed for Android >=6
-  // TODO: find out why this method helps. Maybe it goes about timeout?
-  void onConnect(NimBLEServer *pServer, ble_gap_conn_desc *desc)
-  {
-    pServer->updateConnParams(desc->conn_handle, 24, 48, 0, 60);
-  };
 };
 
 class Lpf2HubCharacteristicCallbacks : public NimBLECharacteristicCallbacks
@@ -58,7 +55,7 @@ public:
     _lpf2HubEmulation = lpf2HubEmulation;
   }
 
-  void onWrite(NimBLECharacteristic *pCharacteristic)
+  void onWrite(NimBLECharacteristic *pCharacteristic, NimBLEConnInfo &connInfo) override
   {
 
     std::string msgReceived = pCharacteristic->getValue();
@@ -214,7 +211,7 @@ public:
     }
   }
 
-  void onRead(NimBLECharacteristic *pCharacteristic)
+  void onRead(NimBLECharacteristic *pCharacteristic, NimBLEConnInfo &connInfo) override
   {
     log_d("read request");
   }
@@ -282,7 +279,7 @@ byte Lpf2HubEmulation::getDeviceTypeForPort(byte portNumber)
   log_d("Number of connected devices: %d", numberOfConnectedDevices);
   for (int idx = 0; idx < numberOfConnectedDevices; idx++)
   {
-    log_v("device %d, port number: %x, device type: %x, callback address: %x", idx, connectedDevices[idx].PortNumber, connectedDevices[idx].DeviceType, connectedDevices[idx].Callback);
+    log_v("device %d, port number: %x, device type: %x", idx, connectedDevices[idx].PortNumber, connectedDevices[idx].DeviceType);
     if (connectedDevices[idx].PortNumber == portNumber)
     {
       log_d("device on port %x has type %x", portNumber, connectedDevices[idx].DeviceType);
@@ -388,11 +385,12 @@ void Lpf2HubEmulation::start()
   log_d("Starting BLE");
 
   NimBLEDevice::init(_hubName);
-  NimBLEDevice::setPower(ESP_PWR_LVL_N0, ESP_BLE_PWR_TYPE_ADV); // 0dB, Advertisment
+  NimBLEDevice::setPower(0); // 0dB
 
   log_d("Create server");
   _pServer = NimBLEDevice::createServer();
   _pServer->setCallbacks(new Lpf2HubServerCallbacks(this));
+  _pServer->advertiseOnDisconnect(true); // default value has changed to false with NimBLE-Arduino 2.x
 
   log_d("Create service");
   _pService = _pServer->createService(LPF2_UUID);
@@ -413,7 +411,7 @@ void Lpf2HubEmulation::start()
   _pAdvertising = NimBLEDevice::getAdvertising();
 
   _pAdvertising->addServiceUUID(LPF2_UUID);
-  _pAdvertising->setScanResponse(true);
+  _pAdvertising->enableScanResponse(true);
   _pAdvertising->setMinInterval(32); // 0.625ms units -> 20ms
   _pAdvertising->setMaxInterval(64); // 0.625ms units -> 40ms
 
@@ -446,12 +444,14 @@ void Lpf2HubEmulation::start()
   // set the advertisment flags to 0x06
   scanResponseData.setFlags(BLE_HS_ADV_F_DISC_GEN);
   // set the power level to 0dB
-  scanResponseData.addData(std::string{0x02, 0x0A, 0x00});
+  scanResponseData.addData(std::vector<uint8_t>{0x02, 0x0A, 0x00});
   // set the slave connection interval range to 20-40ms
-  scanResponseData.addData(std::string{0x05, 0x12, 0x10, 0x00, 0x20, 0x00});
+  scanResponseData.addData(std::vector<uint8_t>{0x05, 0x12, 0x10, 0x00, 0x20, 0x00});
 
-  log_d("advertisment data payload(%d): %s", advertisementData.getPayload().length(), advertisementData.getPayload().c_str());
-  log_d("scan response data payload(%d): %s", scanResponseData.getPayload().length(), scanResponseData.getPayload().c_str());
+  log_d("advertisment data payload(%d):", advertisementData.getPayload().size());
+  log_buf_d(advertisementData.getPayload().data(), advertisementData.getPayload().size());
+  log_d("scan response data payload(%d):", scanResponseData.getPayload().size());
+  log_buf_d(scanResponseData.getPayload().data(), scanResponseData.getPayload().size());
 
   _pAdvertising->setAdvertisementData(advertisementData);
   _pAdvertising->setScanResponseData(scanResponseData);

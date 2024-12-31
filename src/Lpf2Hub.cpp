@@ -9,19 +9,6 @@
 #include "Lpf2Hub.h"
 
 /**
- * Callback if a scan has ended with the results of found devices
- * only needed to enforce the non blocking scan start
- */
-void scanEndedCallback(NimBLEScanResults results)
-{
-    log_d("Number of devices: %d", results.getCount());
-    for (int i = 0; i < results.getCount(); i++)
-    {
-        log_d("device[%d]: %s", i, results.getDevice(i).toString().c_str());
-    }
-}
-
-/**
  * Derived class which could be added as an instance to the BLEClient for callback handling
  * The current hub is given as a parameter in the constructor to be able to set the
  * status flags on a disconnect event accordingly
@@ -37,11 +24,7 @@ public:
         _lpf2Hub = lpf2Hub;
     }
 
-    void onConnect(BLEClient *bleClient)
-    {
-    }
-
-    void onDisconnect(BLEClient *bleClient)
+    void onDisconnect(NimBLEClient *pClient, int reason) override
     {
         _lpf2Hub->_isConnecting = false;
         _lpf2Hub->_isConnected = false;
@@ -52,22 +35,25 @@ public:
 /**
  * Scan for BLE servers and find the first one that advertises the service we are looking for.
  */
-class Lpf2HubAdvertisedDeviceCallbacks : public NimBLEAdvertisedDeviceCallbacks
+class Lpf2HubScanCallbacks : public NimBLEScanCallbacks
 {
     Lpf2Hub *_lpf2Hub;
 
 public:
-    Lpf2HubAdvertisedDeviceCallbacks(Lpf2Hub *lpf2Hub) : NimBLEAdvertisedDeviceCallbacks()
+    Lpf2HubScanCallbacks(Lpf2Hub *lpf2Hub) : NimBLEScanCallbacks()
     {
         _lpf2Hub = lpf2Hub;
     }
 
-    void onResult(NimBLEAdvertisedDevice *advertisedDevice)
+    void onResult(const NimBLEAdvertisedDevice *advertisedDevice) override
     {
         // Found a device, check if the service is contained and optional if address fits requested address
         log_d("advertised device: %s", advertisedDevice->toString().c_str());
 
-        if (advertisedDevice->haveServiceUUID() && advertisedDevice->getServiceUUID().equals(_lpf2Hub->_bleUuid) && (_lpf2Hub->_requestedDeviceAddress == nullptr || (_lpf2Hub->_requestedDeviceAddress && advertisedDevice->getAddress().equals(*_lpf2Hub->_requestedDeviceAddress))))
+        // If _requestedDeviceAddress is set then only compare address values but ignore type to not have to break Legoino interface also
+        // For details see https://github.com/h2zero/NimBLE-Arduino/issues/777
+        if (advertisedDevice->haveServiceUUID() && advertisedDevice->getServiceUUID().equals(_lpf2Hub->_bleUuid) &&
+            (_lpf2Hub->_requestedDeviceAddress == nullptr || memcmp(advertisedDevice->getAddress().getVal(), _lpf2Hub->_requestedDeviceAddress->getVal(), BLE_DEV_ADDR_LEN) == 0))
         {
             advertisedDevice->getScan()->stop();
             _lpf2Hub->_pServerAddress = new BLEAddress(advertisedDevice->getAddress());
@@ -809,14 +795,12 @@ void Lpf2Hub::init()
     BLEDevice::init("");
     pBLEScan = BLEDevice::getScan();
 
-    if (_pAdvertisedDeviceCallbacks == nullptr)
-        _pAdvertisedDeviceCallbacks = new Lpf2HubAdvertisedDeviceCallbacks(this);
-    pBLEScan->setAdvertisedDeviceCallbacks(_pAdvertisedDeviceCallbacks);
+    if (_pScanCallbacks == nullptr)
+        _pScanCallbacks = new Lpf2HubScanCallbacks(this);
+    pBLEScan->setScanCallbacks(_pScanCallbacks);
 
     pBLEScan->setActiveScan(true);
-    // start method with callback function to enforce the non blocking scan. If no callback function is used,
-    // the scan starts in a blocking manner
-    pBLEScan->start(_scanDuration, scanEndedCallback);
+    pBLEScan->start(_scanDuration * 1000); // all durations changed from seconds to milliseconds with NimBLE-Arduino 2.x
 }
 
 /**
@@ -828,7 +812,7 @@ void Lpf2Hub::init(std::string deviceAddress)
     if (_requestedDeviceAddress != nullptr)
         delete _requestedDeviceAddress;
 
-    _requestedDeviceAddress = new BLEAddress(deviceAddress);
+    _requestedDeviceAddress = new BLEAddress(deviceAddress, 0 /* will be ignored on comparison anyway */);
     init();
 }
 
@@ -852,7 +836,7 @@ void Lpf2Hub::init(std::string deviceAddress, uint32_t scanDuration)
     if (_requestedDeviceAddress != nullptr)
         delete _requestedDeviceAddress;
 
-    _requestedDeviceAddress = new BLEAddress(deviceAddress);
+    _requestedDeviceAddress = new BLEAddress(deviceAddress, 0 /* will be ignored on comparison anyway */);
     _scanDuration = scanDuration;
     init();
 }
@@ -1088,10 +1072,10 @@ bool Lpf2Hub::connectHub()
     BLEAddress pAddress = *_pServerAddress;
     NimBLEClient *pClient = nullptr;
 
-    log_d("number of ble clients: %d", NimBLEDevice::getClientListSize());
+    log_d("number of ble clients: %d", NimBLEDevice::getCreatedClientCount());
 
     /** Check if we have a client we should reuse first **/
-    if (NimBLEDevice::getClientListSize())
+    if (NimBLEDevice::getCreatedClientCount())
     {
         /** Special case when we already know this device, we send false as the
          *  second argument in connect() to prevent refreshing the service database.
@@ -1119,9 +1103,9 @@ bool Lpf2Hub::connectHub()
     /** No client to reuse? Create a new one. */
     if (!pClient)
     {
-        if (NimBLEDevice::getClientListSize() >= NIMBLE_MAX_CONNECTIONS)
+        if (NimBLEDevice::getCreatedClientCount() >= NIMBLE_MAX_CONNECTIONS)
         {
-            log_w("max clients reached - no more connections available: %d", NimBLEDevice::getClientListSize());
+            log_w("max clients reached - no more connections available: %d", NimBLEDevice::getCreatedClientCount());
             return false;
         }
 
