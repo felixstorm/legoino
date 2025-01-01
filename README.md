@@ -1,7 +1,9 @@
-[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/legoinochat?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-[![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/corneliusmunz/legoino)](https://github.com/corneliusmunz/legoino/releases/latest/)
-[![arduino-library-badge](https://www.ardu-badge.com/badge/Legoino.svg?)](https://www.ardu-badge.com/Legoino)
-![BuildExampleSketches](https://github.com/corneliusmunz/legoino/workflows/BuildExampleSketches/badge.svg?branch=master)
+# NOTE: This is just a personal fork of https://github.com/corneliusmunz/legoino primarily intended to be used with my own personal projects.
+It may include changes that only make sense within my own projects but since some changes might be helpful for others as well, I still decided to make them available publicly.  
+Since my time is pretty limited, I will most likely not be able to react on issues or pull requests. But feel free to fork again and use and enhance yourself!
+
+And a big thanks to [Cornelius Munz for his work](https://github.com/corneliusmunz/legoino)!
+
 
 # Legoino
 
