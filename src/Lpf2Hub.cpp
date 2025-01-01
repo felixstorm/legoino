@@ -9,17 +9,17 @@
 #include "Lpf2Hub.h"
 
 /**
- * Derived class which could be added as an instance to the BLEClient for callback handling
+ * Derived class which could be added as an instance to the NimBLEClient for callback handling
  * The current hub is given as a parameter in the constructor to be able to set the
  * status flags on a disconnect event accordingly
  */
-class Lpf2HubClientCallback : public BLEClientCallbacks
+class Lpf2HubClientCallback : public NimBLEClientCallbacks
 {
 
     Lpf2Hub *_lpf2Hub;
 
 public:
-    Lpf2HubClientCallback(Lpf2Hub *lpf2Hub) : BLEClientCallbacks()
+    Lpf2HubClientCallback(Lpf2Hub *lpf2Hub) : NimBLEClientCallbacks()
     {
         _lpf2Hub = lpf2Hub;
     }
@@ -56,7 +56,7 @@ public:
             (_lpf2Hub->_requestedDeviceAddress == nullptr || memcmp(advertisedDevice->getAddress().getVal(), _lpf2Hub->_requestedDeviceAddress->getVal(), BLE_DEV_ADDR_LEN) == 0))
         {
             advertisedDevice->getScan()->stop();
-            _lpf2Hub->_pServerAddress = new BLEAddress(advertisedDevice->getAddress());
+            _lpf2Hub->_pServerAddress = new NimBLEAddress(advertisedDevice->getAddress());
             _lpf2Hub->_hubName = advertisedDevice->getName();
 
             if (advertisedDevice->haveManufacturerData())
@@ -788,12 +788,12 @@ void Lpf2Hub::init()
 {
     _isConnected = false;
     _isConnecting = false;
-    _bleUuid = BLEUUID(LPF2_UUID);
-    _charachteristicUuid = BLEUUID(LPF2_CHARACHTERISTIC);
+    _bleUuid = NimBLEUUID(LPF2_UUID);
+    _charachteristicUuid = NimBLEUUID(LPF2_CHARACHTERISTIC);
     _hubType = HubType::UNKNOWNHUB;
 
-    BLEDevice::init("");
-    pBLEScan = BLEDevice::getScan();
+    NimBLEDevice::init("");
+    pBLEScan = NimBLEDevice::getScan();
 
     if (_pScanCallbacks == nullptr)
         _pScanCallbacks = new Lpf2HubScanCallbacks(this);
@@ -812,7 +812,7 @@ void Lpf2Hub::init(std::string deviceAddress)
     if (_requestedDeviceAddress != nullptr)
         delete _requestedDeviceAddress;
 
-    _requestedDeviceAddress = new BLEAddress(deviceAddress, 0 /* will be ignored on comparison anyway */);
+    _requestedDeviceAddress = new NimBLEAddress(deviceAddress, 0 /* will be ignored on comparison anyway */);
     init();
 }
 
@@ -836,7 +836,7 @@ void Lpf2Hub::init(std::string deviceAddress, uint32_t scanDuration)
     if (_requestedDeviceAddress != nullptr)
         delete _requestedDeviceAddress;
 
-    _requestedDeviceAddress = new BLEAddress(deviceAddress, 0 /* will be ignored on comparison anyway */);
+    _requestedDeviceAddress = new NimBLEAddress(deviceAddress, 0 /* will be ignored on comparison anyway */);
     _scanDuration = scanDuration;
     init();
 }
@@ -1069,7 +1069,7 @@ void Lpf2Hub::deactivateHubPropertyUpdate(HubPropertyReference hubProperty)
  */
 bool Lpf2Hub::connectHub()
 {
-    BLEAddress pAddress = *_pServerAddress;
+    NimBLEAddress pAddress = *_pServerAddress;
     NimBLEClient *pClient = nullptr;
 
     log_d("number of ble clients: %d", NimBLEDevice::getCreatedClientCount());
@@ -1122,7 +1122,7 @@ bool Lpf2Hub::connectHub()
     }
 
     log_d("connected to: %s, RSSI: %d", pClient->getPeerAddress().toString().c_str(), pClient->getRssi());
-    BLERemoteService *pRemoteService = pClient->getService(_bleUuid);
+    NimBLERemoteService *pRemoteService = pClient->getService(_bleUuid);
     if (pRemoteService == nullptr)
     {
         log_e("failed to get ble client");

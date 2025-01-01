@@ -122,13 +122,13 @@ public:
 
   // BLE specific stuff
   void notifyCallback(NimBLERemoteCharacteristic *pBLERemoteCharacteristic, uint8_t *pData, size_t length, bool isNotify);
-  BLEUUID _bleUuid;
-  BLEUUID _charachteristicUuid;
+  NimBLEUUID _bleUuid;
+  NimBLEUUID _charachteristicUuid;
   NimBLEScanCallbacks *_pScanCallbacks = nullptr;
-  BLEAddress *_pServerAddress = nullptr;
-  BLEAddress *_requestedDeviceAddress = nullptr;
-  BLERemoteCharacteristic *_pRemoteCharacteristic = nullptr;
-  BLEScan *pBLEScan = nullptr;
+  NimBLEAddress *_pServerAddress = nullptr;
+  NimBLEAddress *_requestedDeviceAddress = nullptr;
+  NimBLERemoteCharacteristic *_pRemoteCharacteristic = nullptr;
+  NimBLEScan *pBLEScan = nullptr;
   HubType _hubType = HubType::UNKNOWNHUB;
   std::string _hubName;
   boolean _isConnecting = false;

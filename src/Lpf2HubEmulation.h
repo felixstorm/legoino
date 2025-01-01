@@ -30,13 +30,13 @@ class Lpf2HubEmulation
 {
 private:
   // Notification callbacks if values are written to the characteristic
-  BLEUUID _bleUuid;
-  BLEUUID _charachteristicUuid;
-  BLEAddress *_pServerAddress;
-  BLEServer *_pServer;
-  BLEService *_pService;
-  BLEAddress *_hubAddress = nullptr;
-  BLEAdvertising *_pAdvertising;
+  NimBLEUUID _bleUuid;
+  NimBLEUUID _charachteristicUuid;
+  NimBLEAddress *_pServerAddress;
+  NimBLEServer *_pServer;
+  NimBLEService *_pService;
+  NimBLEAddress *_hubAddress = nullptr;
+  NimBLEAdvertising *_pAdvertising;
 
   // Hub information values
   int8_t _rssi;
@@ -78,7 +78,7 @@ public:
 
   bool isConnected = false;
   bool isPortInitialized = false;
-  BLECharacteristic *pCharacteristic;
+  NimBLECharacteristic *pCharacteristic;
   WritePortCallback writePortCallback = nullptr;
 };
 
